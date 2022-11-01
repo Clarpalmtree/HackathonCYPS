@@ -1,11 +1,24 @@
-#Work in tmp
-cd /tmp/
-#Downloading FASTQ files
-SRAID=SRR....
-wget -O ${SRAID}.sra https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos1/sra-pub-run-5/${SRAID}/${SRAID}.1
-fastq-dump --gzip --split-files ./${SRAID}.sra
-#Downloading chromosome sequences
-wget -o <chromosome>.fa.gz ftp://ftp.ensembl.org/pub/release-101/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.!{chr}.fa.gz
-gunzip -c *.fa.gz > ref.fa
-#Getting genome annotations
-wget ftp://ftp.ensembl.org/pub/release-101/gtf/homo_sapiens/Homo_sapiens.GRCh38.101.chr.gtf.gz
+nextflow.enable.dsl=2
+// setting params
+params.project = "SRA062359" // sra project number
+params.resultdir = 'results' // results output directory
+
+process getSRAIDs {
+
+        publishDir params.resultdir, mode: 'copy' //Les résultats sont copié dans le dossier 'params.resultdir'
+
+        input:
+        val projectid
+
+        output:
+        file 'sra.txt'//Récupération des numéros SRR dans un fichier txt
+
+        script:
+        """
+        esearch -db sra -query $projectid  | efetch --format runinfo | grep TRANSCRIPTOMIC | cut -d ',' -f 1 > sra.txt
+        """
+}
+
+workflow {
+    getSRAIDs(params.project)
+}
