@@ -58,10 +58,10 @@ process mergechr {
     publishDir params.resultdir, mode: 'copy'
 
     input:
-    path allchr
+    file allchr
 
     output:
-    path 'ref.fa', emit: fasta //unique fichier contenant tous les chromosomes
+    file 'ref.fa'//unique fichier contenant tous les chromosomes
 
     script:
     """
@@ -84,6 +84,25 @@ process getAnnot {
     """
 }
 
+process index{
+	publishDir params.resultdir, mode: 'copy'
+
+	input:
+	file c 
+	file annot
+
+	output:
+	path 'ref/' //renvoie un unique repertoire contenant tous les fichiers de l'index de reference
+
+	script: 
+	"""
+	mkdir ref
+	chmod +x ref
+	STAR --runThreadN 6 --runMode genomeGenerate --genomeDir ref --genomeFastaFiles ${c} --sjdbGTFfile ${annot}
+	"""
+}
+
+
 
 workflow {
     // Channels
@@ -98,5 +117,7 @@ workflow {
     mergechr(chromosome.out)
     //annot
     getAnnot()
+    // Indexation
+    index(mergechr.out, getAnnot.out)
 
 }
