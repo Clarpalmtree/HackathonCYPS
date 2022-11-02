@@ -2,8 +2,6 @@ nextflow.enable.dsl=2
 // setting params
 params.project = "SRA062359" // sra project number
 params.resultdir = 'results' // results output directory
-params.list = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","MT"] //liste de tous les chromosomes humains
-
 
 process getSRAIDs {
 
@@ -53,6 +51,8 @@ process chromosome {
     wget -o ${chr}.fa.gz "ftp://ftp.ensembl.org/pub/release-104/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.${chr}.fa.gz"
     """
 }
+
+
 
 
 
