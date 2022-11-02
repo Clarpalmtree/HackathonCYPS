@@ -58,46 +58,17 @@ process mergechr {
     publishDir params.resultdir, mode: 'copy'
 
     input:
-    file allchr from chrfasta.collect() //attend que tous les chromosomes soient telecharges
+    path allchr
 
     output:
-    file 'ref.fa' into fasta //unique fichier contenant tous les chromosomes
+    path 'ref.fa', emit: fasta //unique fichier contenant tous les chromosomes
 
     script:
     """
-    gunzip -c ${allchr}> ref.fa
+    gunzip -c ${allchr} > ref.fa
     """
 }
 
-process gtf {
-    
-    output:
-    file 'annot.gtf' into human_genome
-
-    script:
-    """
-    wget ftp://ftp.ensembl.org/pub/release-104/gtf/homo_sapiens/Homo_sapiens.GRCh38.104.chr.gtf.gz
-    gunzip -c Homo_sapiens.GRCh38.104.chr.gtf.gz > annot.gtf
-    """
-}
-
-process index{
-	publishDir params.resultdir, mode: 'copy'
-
-	input:
-	file c from fasta
-	file annot from human_genome
-
-	output:
-	file 'ref/' into index //renvoie un unique repertoire contenant tous les fichiers de l'index de reference
-
-	script: 
-	"""
-	mkdir ref
-	chmod +x ref
-	STAR --runThreadN ${task.cpus} --runMode genomeGenerate --genomeDir ref --genomeFastaFiles ${c} --sjdbGTFfile ${annot}
-	"""
-}
 
 
 
@@ -107,8 +78,7 @@ workflow {
     getSRAIDs(projectID)
     sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
     sraID.view()
-    fastqDump(sraID)
-    readsTable = fastqDump.out.reads_2.join(fastqDump.out.reads_1) //ajoute les SRR aux tuples des reads pour former des tuples : (file reads1,  file reads2, val SRR)
     chromosome(list)
+    mergechr(chromosome.out)
 
 }
