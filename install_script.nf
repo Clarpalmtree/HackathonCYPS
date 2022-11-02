@@ -44,7 +44,7 @@ process chromosome {
     val chr
 
     output:
-    path 'Homo_sapiens.GRCh38.dna.chromosome.*.fa.gz', emit: chrfasta //place tous les chromosomes telecharges dans 1 channel
+    file 'Homo_sapiens.GRCh38.dna.chromosome.*.fa.gz' //place tous les chromosomes telecharges dans 1 channel
 
     script: 
     """
@@ -75,12 +75,13 @@ process getAnnot {
     publishDir params.resultdir, mode: 'copy'
 
     output:
-    file 'Homo_sapiens.GRCh38.101.chr.gtf.gz'
+    file 'Homo_sapiens.GRCh38.101.chr.gtf'
 
     script:
     """
     #Getting genome annotations
     wget ftp://ftp.ensembl.org/pub/release-101/gtf/homo_sapiens/Homo_sapiens.GRCh38.101.chr.gtf.gz
+    gzip -d Homo_sapiens.GRCh38.101.chr.gtf.gz
     """
 }
 
