@@ -2,6 +2,8 @@ nextflow.enable.dsl=2
 // setting params
 params.project = "SRA062359" // sra project number
 params.resultdir = 'results' // results output directory
+params.list = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","MT"] //liste de tous les chromosomes humains
+
 
 process getSRAIDs {
 
@@ -36,11 +38,32 @@ process fastqDump {
 	"""	
 }
 
+process chromosome {
+
+    publishDir params.resultdir, mode: 'copy'
+
+    input:
+    val chr
+
+    output:
+    path 'Homo_sapiens.GRCh38.dna.chromosome.*.fa.gz', emit: chrfasta //place tous les chromosomes telecharges dans 1 channel
+
+    script: 
+    """
+    wget -o ${chr}.fa.gz "ftp://ftp.ensembl.org/pub/release-104/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.${chr}.fa.gz"
+    """
+}
+
+
+
 workflow {
     projectID=params.project
+    list = Channel.from(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,'MT')
     getSRAIDs(projectID)
     sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
     sraID.view()
     fastqDump(sraID)
     readsTable = fastqDump.out.reads_2.join(fastqDump.out.reads_1) //ajoute les SRR aux tuples des reads pour former des tuples : (file reads1,  file reads2, val SRR)
+    chromosome(list)
+
 }
