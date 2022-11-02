@@ -69,16 +69,34 @@ process mergechr {
     """
 }
 
+process getAnnot {
+    // Getting annotation
 
+    publishDir params.resultdir, mode: 'copy'
+
+    output:
+    file 'Homo_sapiens.GRCh38.101.chr.gtf.gz'
+
+    script:
+    """
+    #Getting genome annotations
+    wget ftp://ftp.ensembl.org/pub/release-101/gtf/homo_sapiens/Homo_sapiens.GRCh38.101.chr.gtf.gz
+    """
+}
 
 
 workflow {
+    // Channels
     projectID=params.project
     list = Channel.from(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,'MT')
+    // sraid
     getSRAIDs(projectID)
     sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
     sraID.view()
+    //chr
     chromosome(list)
     mergechr(chromosome.out)
+    //annot
+    getAnnot()
 
 }
