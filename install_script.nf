@@ -39,7 +39,7 @@ process fastqDump {
 workflow {
     projectID=params.project
     getSRAIDs(projectID)
-    sraID = Channel.fromPath( '/home/ubuntu/results/sra.txt' ).splitText().map { it -> it.trim() }
+    sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
     sraID.view()
     fastqDump(sraID)
     readsTable = fastqDump.out.reads_2.join(fastqDump.out.reads_1) //ajoute les SRR aux tuples des reads pour former des tuples : (file reads1,  file reads2, val SRR)
