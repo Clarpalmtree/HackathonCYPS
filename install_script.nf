@@ -1,17 +1,20 @@
+// COLLECT WORKFLOW
+
 nextflow.enable.dsl=2
+
 // setting params
 params.project = "SRA062359" // sra project number
 params.resultdir = 'results' // results output directory
 
 process getSRAIDs {
-
-        publishDir params.resultdir, mode: 'copy' //Les résultats sont copié dans le dossier 'params.resultdir'
+        // Getting SRA IDs of data of interest in a txt file
+        publishDir params.resultdir, mode: 'copy' 
 
         input:
         val projectid
 
         output:
-        file 'sra.txt'//Récupération des numéros SRR dans un fichier txt
+        file 'sra.txt'
 
         script:
         """
@@ -37,14 +40,14 @@ process fastqDump {
 }
 
 process chromosome {
-
+    // Downloading each chromosome genome file
     publishDir params.resultdir, mode: 'copy'
 
     input:
     val chr
 
     output:
-    file 'Homo_sapiens.GRCh38.dna.chromosome.*.fa.gz' //place tous les chromosomes telecharges dans 1 channel
+    file 'Homo_sapiens.GRCh38.dna.chromosome.*.fa.gz'
 
     script: 
     """
@@ -54,14 +57,14 @@ process chromosome {
 
 
 process mergechr {
-	
+    // Merging all chromosome files into a single 'ref.fa' file (=the reference genome)
     publishDir params.resultdir, mode: 'copy'
 
     input:
     file allchr
 
     output:
-    file 'ref.fa'//unique fichier contenant tous les chromosomes
+    file 'ref.fa' // unique file with all chromosomes
 
     script:
     """
@@ -70,8 +73,7 @@ process mergechr {
 }
 
 process getAnnot {
-    // Getting annotation
-
+    // Getting annotation file and unzipping it for the index process
     publishDir params.resultdir, mode: 'copy'
 
     output:
@@ -86,10 +88,11 @@ process getAnnot {
 }
 
 process index{
+    // indexing with STAR
 	publishDir params.resultdir, mode: 'copy'
 
 	input:
-	file c 
+	file gen
 	file annot
 
 	output:
@@ -99,7 +102,7 @@ process index{
 	"""
 	mkdir ref
 	chmod +x ref
-	STAR --runThreadN 6 --runMode genomeGenerate --genomeDir ref --genomeFastaFiles ${c} --sjdbGTFfile ${annot}
+	STAR --runThreadN 6 --runMode genomeGenerate --genomeDir ref --genomeFastaFiles ${gen} --sjdbGTFfile ${annot}
 	"""
 }
 
@@ -113,6 +116,8 @@ workflow {
     getSRAIDs(projectID)
     sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
     sraID.view()
+    // fasterqDump
+    fastqDump(sraID)
     //chr
     chromosome(list)
     mergechr(chromosome.out)
