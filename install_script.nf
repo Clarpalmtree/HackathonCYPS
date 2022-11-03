@@ -106,6 +106,35 @@ process index{
 	"""
 }
 
+process mapping {
+	publishDir params.resultdir, mode: 'copy'
+
+	input:
+	tuple val (id), file (r2), file (r1)  
+	path ref 
+
+	output:
+	file '*.bam', emit: bamind		//recupere les fichiers bam pour l'indexation samtools
+	file '*.bam', emit: bamcount	//recupere les fichiers bam pour le comptage
+
+	script :
+	"""
+	STAR --outSAMstrandField intronMotif \
+	--outFilterMismatchNmax 4 \
+	--outFilterMultimapNmax 10 \
+	--genomeDir ${ref}\
+	--readFilesIn <(gunzip -c ${r1}) <(gunzip -c ${r2}) \
+	--runThreadN 6 \
+	--outSAMunmapped None \
+	--outSAMtype BAM SortedByCoordinate \
+	--outStd BAM_SortedByCoordinate \
+	--genomeLoad NoSharedMemory \
+	--limitBAMsortRAM 50000000000 \
+	> ${id}.bam
+	"""
+}
+
+
 
 
 workflow {
@@ -125,5 +154,6 @@ workflow {
     getAnnot()
     // Indexation
     index(mergechr.out, getAnnot.out)
+    // mapping(sraID, reads_1, reads_2)
 
 }
