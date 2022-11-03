@@ -134,6 +134,22 @@ process mapping {
 	"""
 }
 
+process mappingbai{
+
+	publishDir params.resultdir, mode: 'copy'
+	
+	input:
+	file bamind
+
+	output:
+	file '*.bai', emit: map
+
+	script:
+	"""
+	samtools index ${bamind}
+	"""
+}
+
 
 
 
@@ -155,5 +171,6 @@ workflow {
     // Indexation
     index(mergechr.out, getAnnot.out)
     // mapping(sraID, reads_1, reads_2)
+    // mappingbai()
 
 }
