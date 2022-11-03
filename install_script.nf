@@ -171,6 +171,6 @@ workflow {
     // Indexation
     index(mergechr.out, getAnnot.out)
     // mapping(sraID, reads_1, reads_2)
-    // mappingbai()
+    // mappingbai(bamind)
 
 }
