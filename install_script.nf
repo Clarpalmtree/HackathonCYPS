@@ -22,21 +22,36 @@ process getSRAIDs {
         """
 }
 
+process getSRA {
+    publishDir params.resultdir, mode: "copy"
+
+    input:
+    val id
+
+    output:
+    file '*.sra'
+
+    script:
+    """
+    wget https://sra-pub-run-odp.s3.amazonaws.com/sra/${id}/${id} -O ${id}.sra
+    """
+}
+
 process fastqDump {
-	
-	publishDir params.resultdir, mode: 'copy'
 
-	input:
-	val id //pour chaque numero SRR
+        publishDir params.resultdir, mode: 'copy'
 
-	output:
-	tuple val (id),file('*1.fastq.gz'), emit: reads_1  // tuple (sraID, read1)
-    tuple val (id),file('*2.fastq.gz'), emit: reads_2  // tuple (sraID, read2)
+        input:
+        val id
+        file sra_file
 
-	script:
-	"""
-    fasterq-dump ${id} --threads 4 --split-files
-	"""	
+        output:
+    tuple val(id), path("*_1.fastq.gz"), path("*_2.fastq.gz")
+
+        script:
+        """
+    fastq-dump --gzip --split-files ${sra_file}
+        """
 }
 
 process chromosome {
@@ -150,9 +165,6 @@ process mappingbai{
 	"""
 }
 
-
-
-
 workflow {
     // Channels
     projectID=params.project
@@ -161,8 +173,10 @@ workflow {
     getSRAIDs(projectID)
     sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
     sraID.view()
-    // fasterqDump
-    fastqDump(sraID)
+    // get sra files
+    getSRA(sraids)
+    // get fastq files
+    fastqDump(sraids,getSRA.out)
     //chr
     chromosome(list)
     mergechr(chromosome.out)
