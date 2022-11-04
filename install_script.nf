@@ -174,9 +174,9 @@ workflow {
     sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
     sraID.view()
     // get sra files
-    getSRA(sraids)
+    getSRA(sraID)
     // get fastq files
-    fastqDump(sraids,getSRA.out)
+    fastqDump(sraID,getSRA.out)
     //chr
     chromosome(list)
     mergechr(chromosome.out)
