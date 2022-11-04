@@ -8,7 +8,7 @@ process mapping {
         publishDir params.resultdir, mode: 'copy'
 
         input:
-        tuple val (id), path (r2), path (r1)
+        tuple val (id), path (r1), path (r2)
         file ref
 
         output:
