@@ -12,8 +12,7 @@ process mapping {
         file ref
 
         output:
-        path '*.bam', emit: bamind              //recupere les fichiers bam pour l'indexation samtools
-        path '*.bam', emit: bamcount    //recupere les fichiers bam pour le comptage
+        path '*.bam'
 
         script :
         """
