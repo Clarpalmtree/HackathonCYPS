@@ -34,7 +34,7 @@ process mapping {
 
 workflow MAPPING {
     take:
-    fastqs_files
+    fastq_files
     index
     main:
     mapping(fastq_files, index)
