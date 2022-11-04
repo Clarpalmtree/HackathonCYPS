@@ -1,13 +1,12 @@
-// COLLECT WORKFLOW
-
 nextflow.enable.dsl=2
 
 // setting params
 params.project = "SRA062359" // sra project number
-params.resultdir = 'results' // results output directory
+params.resultdir = 'data' // results output directory
 
 process getSRAIDs {
         // Getting SRA IDs of data of interest in a txt file
+
         publishDir params.resultdir, mode: 'copy' 
 
         input:
@@ -23,6 +22,7 @@ process getSRAIDs {
 }
 
 process getSRA {
+    // Downloadind .sra files
     publishDir params.resultdir, mode: "copy"
 
     input:
@@ -38,6 +38,7 @@ process getSRA {
 }
 
 process fastqDump {
+        // Downloading fastq files
 
         publishDir params.resultdir, mode: 'copy'
 
@@ -46,16 +47,17 @@ process fastqDump {
         file sra_file
 
         output:
-    tuple val(id), path("*_1.fastq.gz"), path("*_2.fastq.gz")
+        tuple val(id), path("*_1.fastq.gz"), path("*_2.fastq.gz")
 
         script:
         """
-    fastq-dump --gzip --split-files ${sra_file}
+        fastq-dump --gzip --split-files ${sra_file}
         """
 }
 
 process chromosome {
     // Downloading each chromosome genome file
+
     publishDir params.resultdir, mode: 'copy'
 
     input:
@@ -73,6 +75,7 @@ process chromosome {
 
 process mergechr {
     // Merging all chromosome files into a single 'ref.fa' file (=the reference genome)
+
     publishDir params.resultdir, mode: 'copy'
 
     input:
@@ -89,6 +92,7 @@ process mergechr {
 
 process getAnnot {
     // Getting annotation file and unzipping it for the index process
+
     publishDir params.resultdir, mode: 'copy'
 
     output:
@@ -104,6 +108,7 @@ process getAnnot {
 
 process index{
     // indexing with STAR
+
 	publishDir params.resultdir, mode: 'copy'
 
 	input:
@@ -111,80 +116,49 @@ process index{
 	file annot
 
 	output:
-	path 'ref/' //renvoie un unique repertoire contenant tous les fichiers de l'index de reference
+	path 'ref/' // indexing files are stored in ref/ directory
 
 	script: 
 	"""
 	mkdir ref
-	chmod +x ref
 	STAR --runThreadN 6 --runMode genomeGenerate --genomeDir ref --genomeFastaFiles ${gen} --sjdbGTFfile ${annot}
 	"""
 }
 
-process mapping {
-        publishDir params.resultdir, mode: 'copy'
 
-        input:
-        tuple val (id), path (r2), path (r1)
-        file ref
+workflow COLLECT {
+    
 
-        output:
-        path '*.bam', emit: bamind              //recupere les fichiers bam pour l'indexation samtools
-        path '*.bam', emit: bamcount    //recupere les fichiers bam pour le comptage
+    main:
+        chr_list = Channel.from(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,'MT')
 
-        script :
-        """
-        STAR --outSAMstrandField intronMotif \
-        --outFilterMismatchNmax 4 \
-        --outFilterMultimapNmax 10 \
-        --genomeDir ${ref} \
-        --readFilesIn <(gunzip -c ${r1}) <(gunzip -c ${r2}) \
-        --runThreadN 6 \
-        --outSAMunmapped None \
-        --outSAMtype BAM SortedByCoordinate \
-        --outStd BAM_SortedByCoordinate \
-        --genomeLoad NoSharedMemory \
-        --limitBAMsortRAM 50000000000 \
-        > ${id}.bam
-        """
-}
-process mappingbai{
+        // Getting sra ids
+        getSRAIDs(params.project)
 
-	publishDir params.resultdir, mode: 'copy'
-	
-	input:
-	file bamind
+        sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
+        sraID.view()
 
-	output:
-	file '*.bai', emit: map
+        // Testing with only 2 samples
+        // sraID=Channel.from('SRR628582','SRR628583')
 
-	script:
-	"""
-	samtools index ${bamind}
-	"""
-}
+        // get sra files
+        getSRA(sraID)
 
-workflow {
-    // Channels
-    projectID=params.project
-    list = Channel.from(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,'MT')
-    // sraid
-    getSRAIDs(projectID)
-    sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
-    sraID.view()
-    // get sra files
-    getSRA(sraID)
-    // get fastq files
-    fastqDump(sraID,getSRA.out)
-    //chr
-    chromosome(list)
-    mergechr(chromosome.out)
-    //annot
-    getAnnot()
-    // Indexation
-    index(mergechr.out, getAnnot.out)
-    // Mapping
-    mapping(fastqDump.out, index.out)
-    // mappingbai(bamind)
+        // get fastq files
+        fastqDump(sraID,getSRA.out)
+
+        // get chromosome files and reference genome
+        chromosome(chr_list)
+        mergechr(chromosome.out)
+
+        //annotation file
+        getAnnot()
+
+        // Indexation
+        index(mergechr.out, getAnnot.out)
+
+        emit:
+        fastqDump.out
+        index.out
 
 }
