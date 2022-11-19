@@ -22,7 +22,7 @@ process mapping {
         --outFilterMultimapNmax 10 \
         --genomeDir ${ref} \
         --readFilesIn ${r1} ${r2}
-        --runThreadN 6 \
+        --runThreadN ${task.cpus} \
         --outSAMunmapped None \
         --outSAMtype BAM SortedByCoordinate \
         --outStd BAM_SortedByCoordinate \
