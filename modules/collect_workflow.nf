@@ -52,7 +52,7 @@ process fastqDump {
         script:
         """
         fastq-dump --gzip --split-files ${sra_file}
-	gunzip -c *.fastq.gz
+	gunzip *.fastq.gz
         """
 }
 
