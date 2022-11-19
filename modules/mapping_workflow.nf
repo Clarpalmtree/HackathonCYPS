@@ -16,8 +16,6 @@ process mapping {
 
         script :
         """
-        gunzip -c ${r1} > ${r1}
-        gunzip -c ${r2} > ${r2}
         
         STAR --outSAMstrandField intronMotif \
         --outFilterMismatchNmax 4 \
