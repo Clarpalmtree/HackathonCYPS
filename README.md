@@ -41,11 +41,11 @@
   Les [Dockers](https://www.docker.com/en) utilisés sont : 
      
    * [clarpalmtree/samtools](https://hub.docker.com/r/clarpalmtree/samtools) (version 1.9) : créer l'index de référence et réaliser le mapping des reads
-   * [clarpalmtree/starbis](https://hub.docker.com/r/clarpalmtree/starbis) (version 1.14) : pour indexer le mapping
-   * [clarpalmtree/sra](https://hub.docker.com/r/clarpalmtree/sra) (version 2.0.1) : pour récuperer les fichiers fastq, associer les reads 1 et 2
-   * [yanismadi/fastqc](https://hub.docker.com/r/yanismadi/fastqc) (version 2.0.1) : pour faire un contrôle qualité
-   * [yanismadi/subread](https://hub.docker.com/r/yanismadi/subread) (version 2.0.1) : pour faire la matrice de comptage
-   * [siwarhm/dseq2](https://hub.docker.com/r/siwarhm/dseq2) (version 1.28.1) : pour faire l'analyse statistique
+   * [clarpalmtree/starbis](https://hub.docker.com/r/clarpalmtree/starbis) (version 2.7.10a) : pour indexer le mapping
+   * [clarpalmtree/sra](https://hub.docker.com/r/clarpalmtree/sra) (version current) : pour récuperer les fichiers fastq, associer les reads 1 et 2
+   * [yanismadi/fastqc](https://hub.docker.com/r/yanismadi/fastqc) (version 0.11.9) : pour faire un contrôle qualité
+   * [yanismadi/subread](https://hub.docker.com/r/yanismadi/subread) (version 2.0.0) : pour faire la matrice de comptage
+   * [siwarhm/dseq2](https://hub.docker.com/r/siwarhm/dseq2) (version current) : pour faire l'analyse statistique
   
   Les données biologiques utilisées dans notre étude sont celles des SRR contenues dans le fichier [SraAccList_SRA062359.txt](https://github.com//Clarpalmtree/HackathonCYPS/blob/main/SraAccList_SRA062359.txt).
   </p>
