@@ -16,11 +16,14 @@ process mapping {
 
         script :
         """
+        gunzip -c ${r1} > ${r1}
+        gunzip -c ${r2} > ${r2}
+        
         STAR --outSAMstrandField intronMotif \
         --outFilterMismatchNmax 4 \
         --outFilterMultimapNmax 10 \
         --genomeDir ${ref} \
-        --readFilesIn <(gunzip -c ${r1}) <(gunzip -c ${r2}) \
+        --readFilesIn ${r1} ${r2}
         --runThreadN 6 \
         --outSAMunmapped None \
         --outSAMtype BAM SortedByCoordinate \
