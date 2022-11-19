@@ -47,11 +47,12 @@ process fastqDump {
         file sra_file
 
         output:
-        tuple val(id), path("*_1.fastq.gz"), path("*_2.fastq.gz")
+        tuple val(id), path("*_1.fastq"), path("*_2.fastq")
 
         script:
         """
         fastq-dump --gzip --split-files ${sra_file}
+	gunzip -c *.fastq.gz
         """
 }
 
