@@ -145,20 +145,20 @@ workflow COLLECT {
         // sraID=Channel.from('SRR628582','SRR628583')
 
         // get sra files
-        getSRA(sraID)
+        sra_files=getSRA(sraID)
 
         // get fastq files
-        fastqDump(sraID,getSRA.out)
+        fastqDump(sraID,sra_files)
 
         // get chromosome files and reference genome
-        chromosome(chr_list)
-        mergechr(chromosome.out)
+        chr=chromosome(chr_list)
+        gen=mergechr(chr)
 
         //annotation file
-        getAnnot()
+        annot=getAnnot()
 
         // Indexation
-        index(mergechr.out, getAnnot.out)
+        index(gen, annot)
 
         emit:
         fastqDump.out
