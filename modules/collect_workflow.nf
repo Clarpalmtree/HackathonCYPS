@@ -88,6 +88,7 @@ process mergechr {
     script:
     """
     gunzip -c ${allchr} > ref.fa
+    rm *.fa.gz
     """
 }
 
@@ -104,6 +105,7 @@ process getAnnot {
     #Getting genome annotations
     wget ftp://ftp.ensembl.org/pub/release-101/gtf/homo_sapiens/Homo_sapiens.GRCh38.101.chr.gtf.gz
     gzip -d Homo_sapiens.GRCh38.101.chr.gtf.gz
+    rm Homo_sapiens.GRCh38.101.chr.gtf.gz
     """
 }
 
