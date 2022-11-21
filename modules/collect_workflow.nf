@@ -56,41 +56,22 @@ process fastqDump {
         """
 }
 
-process chromosome {
+process getGenome {
     // Downloading each chromosome genome file
 
     publishDir params.resultdir, mode: 'copy'
 
-    input:
-    val chr
-
-    output:
-    file 'Homo_sapiens.GRCh38.dna.chromosome.*.fa.gz'
-
-    script: 
-    """
-    wget -o ${chr}.fa.gz "ftp://ftp.ensembl.org/pub/release-104/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.${chr}.fa.gz"
-    """
-}
-
-
-process mergechr {
-    // Merging all chromosome files into a single 'ref.fa' file (=the reference genome)
-
-    publishDir params.resultdir, mode: 'copy'
-
-    input:
-    file allchr
-
     output:
     file 'ref.fa' // unique file with all chromosomes
 
-    script:
+    script: 
     """
-    gunzip -c ${allchr} > ref.fa
+    wget ftp://ftp.ensembl.org/pub/release-101/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.*.fa.gz
+    gunzip -c *.fa.gz > ref.fa
     rm *.fa.gz
     """
 }
+
 
 process getAnnot {
     // Getting annotation file and unzipping it for the index process
@@ -104,7 +85,8 @@ process getAnnot {
     """
     #Getting genome annotations
     wget ftp://ftp.ensembl.org/pub/release-101/gtf/homo_sapiens/Homo_sapiens.GRCh38.101.chr.gtf.gz
-    gzip -d Homo_sapiens.GRCh38.101.chr.gtf.gz
+    gzip -c Homo_sapiens.GRCh38.101.chr.gtf.gz
+    rm Homo_sapiens.GRCh38.101.chr.gtf.gz
     """
 }
 
@@ -150,8 +132,7 @@ workflow COLLECT {
         fastq=fastqDump(sraID,sra_files)
 
         // get chromosome files and reference genome
-        chr=chromosome(chr_list)
-        gen=mergechr(chr)
+        gen=getGenome()
 
         //annotation file
         annot=getAnnot()
