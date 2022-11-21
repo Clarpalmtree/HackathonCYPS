@@ -113,11 +113,8 @@ workflow COLLECT {
     
 
     main:
-        chr_list = Channel.from(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,'MT')
-
         // Getting sra ids
         getSRAIDs(params.project)
-
         sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
         sraID.view()
 
@@ -125,7 +122,7 @@ workflow COLLECT {
         // sraID=Channel.from('SRR628582','SRR628583')
 
         // get sra files
-        sra_files=getSRA(sraID)
+        getSRA(sraID)
 
         // get fastq files
         fastq=fastqDump(sraID,sra_files)
