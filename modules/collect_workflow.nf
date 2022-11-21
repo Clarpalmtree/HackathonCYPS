@@ -148,7 +148,7 @@ workflow COLLECT {
         sra_files=getSRA(sraID)
 
         // get fastq files
-        fastqDump(sraID,sra_files)
+        fastq=fastqDump(sraID,sra_files)
 
         // get chromosome files and reference genome
         chr=chromosome(chr_list)
@@ -158,10 +158,10 @@ workflow COLLECT {
         annot=getAnnot()
 
         // Indexation
-        index(gen, annot)
+        ind=index(gen, annot)
 
         emit:
-        fastqDump.out
-        index.out
+        fastq
+        ind
 
 }
