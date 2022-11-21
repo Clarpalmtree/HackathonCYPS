@@ -56,18 +56,27 @@ process fastqDump {
         """
 }
 
-process getGenome {
+process chromosome {
     // Downloading each chromosome genome file
-
-    publishDir params.resultdir, mode: 'copy'
-
+    input:
+    val chr
     output:
-    file 'ref.fa' // unique file with all chromosomes
-
+    file 'Homo_sapiens.GRCh38.dna.chromosome.*.fa.gz'
     script: 
     """
-    wget ftp://ftp.ensembl.org/pub/release-101/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.*.fa.gz
-    gunzip -c *.fa.gz > ref.fa
+    wget -o ${chr}.fa.gz "ftp://ftp.ensembl.org/pub/release-104/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.${chr}.fa.gz"
+    """
+}
+process mergechr {
+    // Merging all chromosome files into a single 'ref.fa' file (=the reference genome)
+    publishDir params.resultdir, mode: 'copy'
+    input:
+    file allchr
+    output:
+    file 'ref.fa' // unique file with all chromosomes
+    script:
+    """
+    gunzip -c ${allchr} > ref.fa
     """
 }
 
@@ -127,7 +136,8 @@ workflow COLLECT {
         fastq=fastqDump(sraID,sra_files)
 
         // get chromosome files and reference genome
-        gen=getGenome()
+        chromosome(chr_list)
+        mergechr(chromosome.out)
 
         //annotation file
         annot=getAnnot()
