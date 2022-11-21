@@ -16,19 +16,7 @@ process mapping {
 
         script :
         """
-        
-        STAR --outSAMstrandField intronMotif \
-        --outFilterMismatchNmax 4 \
-        --outFilterMultimapNmax 10 \
-        --genomeDir ${ref} \
-        --readFilesIn ${r1} ${r2}
-        --runThreadN ${task.cpus} \
-        --outSAMunmapped None \
-        --outSAMtype BAM SortedByCoordinate \
-        --outStd BAM_SortedByCoordinate \
-        --genomeLoad NoSharedMemory \
-        --limitBAMsortRAM 50000000000 \
-        > ${id}.bam
+        STAR --outSAMstrandField intronMotif --outFilterMismatchNmax 4 --outFilterMultimapNmax 10 --genomeDir ${ref} --readFilesIn ${r1} ${r2} --runThreadN 16 --outSAMunmapped None --outSAMtype BAM SortedByCoordinate --outStd BAM_SortedByCoordinate --genomeLoad NoSharedMemory > ${id}.bam
         """
 }
 
