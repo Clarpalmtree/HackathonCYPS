@@ -130,7 +130,7 @@ workflow COLLECT {
         // sraID=Channel.from('SRR628582','SRR628583')
 
         // get sra files
-        getSRA(sraID)
+        sra_files=getSRA(sraID)
 
         // get fastq files
         fastq=fastqDump(sraID,sra_files)
