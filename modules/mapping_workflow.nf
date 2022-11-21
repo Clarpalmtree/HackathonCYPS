@@ -37,5 +37,5 @@ workflow MAPPING {
     fastq_files
     index
     main:
-    mapping(fastq_files, index)
+    map=mapping(fastq_files, index)
 }
