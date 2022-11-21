@@ -52,7 +52,7 @@ process fastqDump {
         script:
         """
         fastq-dump --gzip --split-files ${sra_file}
-	gunzip *.fastq.gz
+	    gunzip *.fastq.gz
         """
 }
 
@@ -68,7 +68,6 @@ process getGenome {
     """
     wget ftp://ftp.ensembl.org/pub/release-101/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.*.fa.gz
     gunzip -c *.fa.gz > ref.fa
-    rm *.fa.gz
     """
 }
 
