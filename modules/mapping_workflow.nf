@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 params.project = "SRA062359" // sra project number
 params.resultdir = 'mapping' // results output directory
 
-process mapping {
+process mapping_bam {
         publishDir params.resultdir, mode: 'copy'
 
         input:
@@ -16,8 +16,24 @@ process mapping {
 
         script :
         """
-        STAR --outSAMstrandField intronMotif --outFilterMismatchNmax 4 --outFilterMultimapNmax 10 --genomeDir ${ref} --readFilesIn ${r1} ${r2} --runThreadN 16 --outSAMunmapped None --outSAMtype BAM SortedByCoordinate --outStd BAM_SortedByCoordinate --genomeLoad NoSharedMemory > ${id}.bam
+        STAR --outSAMstrandField intronMotif --outFilterMismatchNmax 4 --outFilterMultimapNmax 10 --genomeDir ${ref} --readFilesIn ${r1} ${r2} --runThreadN ${task.cpus} --outSAMunmapped None --outSAMtype BAM SortedByCoordinate --outStd BAM_SortedByCoordinate --genomeLoad NoSharedMemory > ${id}.bam
         """
+}
+
+process mapping_bai {
+
+	publishDir params.resultdir, mode: 'copy'
+	
+	input:
+	file bam // bam files
+
+	output:
+	file '*.bai'
+
+	script:
+	"""
+	samtools index ${bam} nthreads=${task.cpus}
+	"""
 }
 
 process featureCounts {
@@ -43,6 +59,7 @@ workflow MAPPING {
     index
     genome
     main:
-    map=mapping(fastq_files, index)
+    map=mapping_bam(fastq_files, index)
+    mapping_bai(map)
     matrix=featureCounts(map,genome)
 }
