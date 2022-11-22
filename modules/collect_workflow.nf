@@ -126,7 +126,7 @@ workflow COLLECT {
         fastq=fastqDump(sraID,getSRA.out)
 
         // get chromosome files and reference genome
-        getGenome()
+        genome=getGenome()
 
         //annotation file
         getAnnot()
@@ -137,5 +137,6 @@ workflow COLLECT {
         emit:
         fastq
         ind
+	genome
 
 }
