@@ -42,7 +42,7 @@ process featureCounts {
 
     input:
     path bam // bam files
-    file gen // genome
+    file annot // annotation
 
     output:
     tuple file ('output.counts'), file ('output.counts.summary') //recupere la matrice de comptage et un résumé de l’attribution des reads
@@ -57,10 +57,10 @@ workflow MAPPING {
     take:
     fastq_files
     index
-    genome
+    annot
     
     main:
     map=mapping(fastq_files, index)
     mapping_bai(map)
-    matrix=featureCounts(map,genome)
+    matrix=featureCounts(map,annot)
 }
