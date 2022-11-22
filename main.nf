@@ -8,7 +8,7 @@ workflow{
     COLLECT()
     fastq_files=COLLECT.out[0]
     index=COLLECT.out[1]
-    genome=COLLECT.out[2]
-    MAPPING(fastq_files, index, genome)
+    annot=COLLECT.out[2]
+    MAPPING(fastq_files, index, annot)
 
 }
