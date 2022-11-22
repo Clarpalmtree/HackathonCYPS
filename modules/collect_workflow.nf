@@ -109,8 +109,6 @@ workflow COLLECT {
     
 
     main:
-    	chr_list = Channel.from(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,'MT')
-	
         // Getting sra ids
         getSRAIDs(params.project)
         sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
@@ -126,10 +124,10 @@ workflow COLLECT {
         fastq=fastqDump(sraID,getSRA.out)
 
         // get chromosome files and reference genome
-        genome=getGenome()
+        getGenome()
 
         //annotation file
-        getAnnot()
+        annot=getAnnot()
 
         // Indexation
         ind=index(getGenome.out, getAnnot.out)
@@ -137,6 +135,6 @@ workflow COLLECT {
         emit:
         fastq
         ind
-	genome
+	annot
 
 }
