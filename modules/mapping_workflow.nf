@@ -20,10 +20,29 @@ process mapping {
         """
 }
 
+process featureCounts {
+
+    publishDir params.resultdir, mode: 'copy'
+
+    input:
+    file bam // bam files
+    file gen // genome
+
+    output:
+    tuple file ('output.counts'), file ('output.counts.summary') //recupere la matrice de comptage et un résumé de l’attribution des reads
+
+    script:
+    """
+    featureCounts -T ${task.cpus} -t gene -g gene_id -s 0 -a ${gen} -o output.counts ${bam}
+    """
+}
+
 workflow MAPPING {
     take:
     fastq_files
     index
+    genome
     main:
     map=mapping(fastq_files, index)
+    matrix=featureCounts(map,genome)
 }
