@@ -2,7 +2,11 @@ nextflow.enable.dsl=2
 
 // setting params
 params.project = "SRA062359" // sra project number
-params.resultdir = 'data' // results output directory
+params.resultdir = 'sra_info' // results output directory
+params.resultdir2 = 'fastq' // results output directory
+params.resultdir3 = 'genome' // results output directory
+params.resultdir4 = 'annotation' // results output directory
+params.resultdir5 = 'annotation' // results output directory
 
 process getSRAIDs {
         // Getting SRA IDs of data of interest in a txt file
@@ -40,7 +44,7 @@ process getSRA {
 process fastqDump {
         // Downloading fastq files
 
-        publishDir params.resultdir, mode: 'copy'
+        publishDir params.resultdir2, mode: 'copy'
 
         input:
         val id
@@ -58,7 +62,7 @@ process fastqDump {
 
 process getGenome {
     // Downloading each chromosome genome file
-    publishDir params.resultdir, mode: 'copy'
+    publishDir params.resultdir3, mode: 'copy'
     output:
     file 'ref.fa' // unique file with all chromosomes
     script: 
@@ -72,7 +76,7 @@ process getGenome {
 process getAnnot {
     // Getting annotation file and unzipping it for the index process
 
-    publishDir params.resultdir, mode: 'copy'
+    publishDir params.resultdir4, mode: 'copy'
 
     output:
     file 'Homo_sapiens.GRCh38.101.chr.gtf'
@@ -88,14 +92,14 @@ process getAnnot {
 process index{
     // indexing with STAR
 
-	publishDir params.resultdir, mode: 'copy'
+	publishDir params.resultdir5, mode: 'copy'
 
 	input:
 	file gen
 	file annot
 
 	output:
-	path 'ref/' // indexing files are stored in ref/ directory
+	path 'index_data/' // indexing files are stored in ref/ directory
 
 	script: 
 	"""
