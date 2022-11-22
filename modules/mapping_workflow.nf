@@ -51,7 +51,7 @@ process featureCounts {
 
     script:
     """
-    featureCounts -T ${task.cpus} -t gene -g gene_id -s 0 -a ${gen} -o output.counts ${bam}
+    featureCounts -T ${task.cpus} -t gene -g gene_id -s 0 -a ${annot} -o output.counts ${bam}
     """
 }
 
