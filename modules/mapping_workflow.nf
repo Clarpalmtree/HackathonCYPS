@@ -25,7 +25,7 @@ process mapping_bai {
 	publishDir params.resultdir, mode: 'copy'
 	
 	input:
-	file bam // bam files
+	path bam // bam files
 
 	output:
 	file '*.bai'
@@ -41,7 +41,7 @@ process featureCounts {
     publishDir params.resultdir, mode: 'copy'
 
     input:
-    file bam // bam files
+    path bam // bam files
     file gen // genome
 
     output:
@@ -58,6 +58,7 @@ workflow MAPPING {
     fastq_files
     index
     genome
+    
     main:
     map=mapping_bam(fastq_files, index)
     mapping_bai(map)
