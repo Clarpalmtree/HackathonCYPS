@@ -2,7 +2,9 @@ nextflow.enable.dsl=2
 
 // setting params
 params.project = "SRA062359" // sra project number
-params.resultdir = 'mapping' // results output directory
+params.resultdir = 'mapping_bam' // results output directory
+params.resultdir2 = 'mapping_bai' // results output directory
+params.resultdir3 = 'count' // results output directory
 
 process mapping {
         publishDir params.resultdir, mode: 'copy'
@@ -22,7 +24,7 @@ process mapping {
 
 process mapping_bai {
 
-	publishDir params.resultdir, mode: 'copy'
+	publishDir params.resultdir2, mode: 'copy'
 	
 	input:
 	path bam // bam files
@@ -38,7 +40,7 @@ process mapping_bai {
 
 process featureCounts {
 
-    publishDir params.resultdir, mode: 'copy'
+    publishDir params.resultdir3, mode: 'copy'
 
     input:
     path bam // bam files
