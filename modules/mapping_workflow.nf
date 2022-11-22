@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 params.project = "SRA062359" // sra project number
 params.resultdir = 'mapping' // results output directory
 
-process mapping_bam {
+process mapping {
         publishDir params.resultdir, mode: 'copy'
 
         input:
@@ -60,7 +60,7 @@ workflow MAPPING {
     genome
     
     main:
-    map=mapping_bam(fastq_files, index)
+    map=mapping(fastq_files, index)
     mapping_bai(map)
     matrix=featureCounts(map,genome)
 }
