@@ -99,7 +99,7 @@ process index{
 	file annot
 
 	output:
-	path 'index_data/' // indexing files are stored in ref/ directory
+	path 'index_files/' // indexing files are stored in ref/ directory
 
 	script: 
 	"""
