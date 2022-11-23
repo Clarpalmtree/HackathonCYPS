@@ -6,7 +6,7 @@ params.resultdir = 'sra_info' // results output directory
 params.resultdir2 = 'fastq' // results output directory
 params.resultdir3 = 'genome' // results output directory
 params.resultdir4 = 'annotation' // results output directory
-params.resultdir5 = 'annotation' // results output directory
+params.resultdir5 = 'index' // results output directory
 
 process getSRAIDs {
         // Getting SRA IDs of data of interest in a txt file
