@@ -58,11 +58,11 @@ process featureCounts {
 workflow MAPPING {
     take:
     fastq_files
-    index
+    index_files
     annot
     
     main:
-    mapping(fastq_files, index)
+    mapping(fastq_files, index_files)
     mapping_bai(mapping.out)
     matrix=featureCounts(mapping.out.collect(),annot)
 }
