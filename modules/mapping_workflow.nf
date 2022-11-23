@@ -11,7 +11,7 @@ process mapping {
 
         input:
         tuple val (id), path (r1), path (r2)
-        file idex_files
+        file index_files
 
         output:
         path '*.bam'
