@@ -103,8 +103,8 @@ process index{
 
 	script: 
 	"""
-	mkdir ref
-	STAR --runThreadN ${task.cpus} --runMode genomeGenerate --genomeDir ref --genomeFastaFiles ${gen} --sjdbGTFfile ${annot}
+	mkdir index_files
+	STAR --runThreadN ${task.cpus} --runMode genomeGenerate --genomeDir index_files --genomeFastaFiles ${gen} --sjdbGTFfile ${annot}
 	"""
 }
 
