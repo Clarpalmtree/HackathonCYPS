@@ -64,5 +64,5 @@ workflow MAPPING {
     main:
     mapping(fastq_files, index)
     mapping_bai(mapping.out)
-    matrix=featureCounts(mapping.collect(),annot)
+    matrix=featureCounts(mapping.out.collect(),annot)
 }
