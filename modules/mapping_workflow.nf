@@ -34,7 +34,7 @@ process mapping_bai {
 
 	script:
 	"""
-	samtools index ${bam} nthreads=${task.cpus}
+	samtools index ${bam}
 	"""
 }
 
