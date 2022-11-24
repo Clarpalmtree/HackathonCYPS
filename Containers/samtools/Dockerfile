@@ -1,21 +1,20 @@
 # base image : Ubuntu
-FROM ubuntu:22.04
+FROM ubuntu:22:04
 
-RUN apt-get update --fix-missing \
-&& apt-get install -y wget gcc make libbz2-dev zlib1g zlib1g-dev liblzma5 liblzma-dev libncurses5 libncurses5-dev bzip2 \
-&& cd /usr/local/ \
-&& wget -O samtools.tar.bz2 https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2 \
-&& tar -xjvf samtools.tar.bz2 \
-&& rm -rf samtools.tar.bz2 \
-&& cd samtools-1.9 \
-&& ./configure \
-&& make \
-&& make install \
-&& cd /usr/local \
-&& rm -rf /usr/local/samtools-1.9 \
-&& apt-get remove -y wget gcc make libbz2-dev zlib1g-dev liblzma-dev libncurses-dev bzip2 \
-&& apt-get autoremove -y \
-&& apt-get clean \
-&& rm -rf /var/lib/apt/lists/* 
+RUN apt-get update && apt-get -y upgrade && \
+	apt-get install -y build-essential wget \
+		libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev libcurl3-dev && \
+	apt-get clean && apt-get purge && \
+	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENTRYPOINT ["/usr/local/bin/samtools"]
+WORKDIR /usr/src
+
+#Samtools
+RUN wget https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2 && \
+	tar jxf samtools-1.9.tar.bz2 && \
+	rm samtools-1.9.tar.bz2 && \
+	cd samtools-1.9 && \
+	./configure --prefix $(pwd) && \
+	make
+
+ENV PATH=${PATH}:/usr/src/samtools-1.9 
