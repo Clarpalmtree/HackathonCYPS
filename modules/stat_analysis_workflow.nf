@@ -3,19 +3,26 @@ nextflow.enable.dsl=2
 // setting params
 params.resultdir = 'stat_analysis' // results output directory
 
+process stat_analysis {
+    publishDir params.resultdir, mode: 'copy'
 
-process mapping {
-        publishDir params.resultdir, mode: 'copy'
+    input:
+    file 'output.counts' from countData
 
-        input:
-        tuple val (id), path (r1), path (r2)
-        file index_files
+    output:
+    tuple file('PCA_GraphOfIndividuals.pdf'), file('DESeq_results.txt'), file('plot_counts.pdf'), file ('heatmap_MostVariableGenes.pdf'), file ('MostVariableGenes.txt'),
+          file ('Significative_DEgenes.txt'), file('Significative_DEgenes_Summary.txt') into ana_stat //Récupère les résultats de l'analyse statistique
 
-        output:
-        path '*.bam'
+    script:
+    """
+    stat_analysis.r ${'output.counts'} $PWD
+    """
+}
 
-        script :
-        """
-        STAR --outSAMstrandField intronMotif --outFilterMismatchNmax 4 --outFilterMultimapNmax 10 --genomeDir ${index_files} --readFilesIn ${r1} ${r2} --runThreadN ${task.cpus} --outSAMunmapped None --outSAMtype BAM SortedByCoordinate --outStd BAM_SortedByCoordinate --genomeLoad NoSharedMemory > ${id}.bam
-        """
+workflow STAT {
+    take:
+    matrix
+    
+    main:
+    stat_analysis(matrix)
 }
