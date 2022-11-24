@@ -41,7 +41,7 @@
     
   Les [Dockers](https://www.docker.com/en) utilisés sont : 
      
-   * [clarpalmtree/samtools](https://hub.docker.com/r/clarpalmtree/samtools) (version 1.9) : créer l'index de référence et réaliser le mapping des reads
+   * [yanismadi/samtools](https://hub.docker.com/r/yanismadi/samtools) (version 1.9) : créer l'index de référence et réaliser le mapping des reads
    * [clarpalmtree/starbis](https://hub.docker.com/r/clarpalmtree/starbis) (version 2.7.10a) : pour indexer le mapping
    * [clarpalmtree/sra](https://hub.docker.com/r/clarpalmtree/sra) (version current) : pour récuperer les fichiers fastq, associer les reads 1 et 2
    * [yanismadi/fastqc](https://hub.docker.com/r/yanismadi/fastqc) (version 0.11.9) : pour faire un contrôle qualité
