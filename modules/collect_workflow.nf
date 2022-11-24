@@ -85,7 +85,7 @@ process getAnnot {
     """
     #Getting genome annotations
     wget ftp://ftp.ensembl.org/pub/release-101/gtf/homo_sapiens/Homo_sapiens.GRCh38.101.chr.gtf.gz
-    gunzip -c Homo_sapiens.GRCh38.101.chr.gtf.gz
+    gunzip -c Homo_sapiens.GRCh38.101.chr.gtf.gz > Homo_sapiens.GRCh38.101.chr.gtf
     rm Homo_sapiens.GRCh38.101.chr.gtf.gz
     """
 }
