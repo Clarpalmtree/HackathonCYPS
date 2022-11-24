@@ -45,6 +45,7 @@ process featureCounts {
     input:
     path bam // bam files
     file annot // annotation
+    path bai // seulement pour obtenir les bam indexés
 
     output:
     tuple file ('output.counts'), file ('output.counts.summary') //recupere la matrice de comptage et un résumé de l’attribution des reads
@@ -64,7 +65,7 @@ workflow MAPPING {
     main:
     mapping(fastq_files, index_files)
     mapping_bai(mapping.out)
-    matrix=featureCounts(mapping.out.collect(),annot)
+    matrix=featureCounts(mapping.out.collect(),annot,mapping_bai.out.collect())
     
     emit:
     matrix[0]
