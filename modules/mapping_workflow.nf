@@ -67,5 +67,5 @@ workflow MAPPING {
     matrix=featureCounts(mapping.out.collect(),annot)
     
     emit:
-    matrix
+    matrix[0]
 }
