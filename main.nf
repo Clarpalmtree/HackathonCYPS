@@ -11,7 +11,7 @@ workflow{
     index=COLLECT.out[1]
     annot=COLLECT.out[2]
     MAPPING(fastq_files, index, annot)
-    matrix=MAPPING.out[1]
+    matrix=MAPPING.out[0]
     STAT(matrix)
 
 }
