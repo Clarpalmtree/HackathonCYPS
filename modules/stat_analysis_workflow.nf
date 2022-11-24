@@ -7,7 +7,7 @@ process stat_analysis {
     publishDir params.resultdir, mode: 'copy'
 
     input:
-    file 'output.counts' from countData
+    file 'output.counts'
 
     output:
     tuple file('PCA_GraphOfIndividuals.pdf'), file('DESeq_results.txt'), file('plot_counts.pdf'), file ('heatmap_MostVariableGenes.pdf'), file ('MostVariableGenes.txt'),
