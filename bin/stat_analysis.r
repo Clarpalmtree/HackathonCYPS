@@ -22,7 +22,7 @@ library(FactoMineR)             # Loading packahe for the PCA
 args = commandArgs(T)
 counts_file = args[1]
 dir = args[2]
-path = paste(dir, "/results/", sep="")
+path = paste(dir, "/count/", sep="")
 count_file = read.table(paste(path, counts_file, sep=""), header=T)    # Loading count matrix file
 counts = count_file[,7:14]
 rownames(counts) = count_file[,1]
