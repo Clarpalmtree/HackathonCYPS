@@ -30,9 +30,9 @@
 
 <div align="left"><h2>Résultats</h2></div>
   <p>
+  
   Les fichiers issus de notre analyses des données sont observables dans le dossier `/analysis` : 
-  </p>
-  <p>
+  
   * `PCA_GraphOfIndividuals.pdf` : graphe PCA
   * `plot_counts.pdf` : graphe du nombre de comptages normalisé du gène le plus différentiellement exprimé pour les deux phénotypes
   * `heatmap_MostVariableGenes.pdf` : heatmap des comptages normalisés des 30 gènes les plus différentiellement exprimés entre les deux phénotypes
@@ -42,7 +42,7 @@
   * `Significative_DEgenes_Summary.txt` : tableau récapitualtif de la matrice Significative_DEgenes indiquant le nombre et ratio des gènes significativement            différentiellement exprimés ainsi que leur ratio
   </p>
 </div>
-</div>
+
 
 <div align="left"><h2>Matériels</h2></div>
 <div align="justify">
