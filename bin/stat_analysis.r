@@ -11,7 +11,7 @@ counts_file = args[1]
 dir = args[2]
 
 meta<-read.table(paste(dir, "/metaData.txt", sep=""), header = TRUE, sep = ",",row.names = 1)
-Counts = read.table(paste(dir, "/count/output.counts", sep=""), header=T)    # Loading count matrix file
+Counts = read.table(paste(dir, "/output.counts", sep=""), header=T)    # Loading count matrix file
 # ## DATA ------------------------------------------------------------------------
 # meta<-read.table("metaData.txt", header = TRUE, sep = ",",row.names = 1)
 # Counts<-read.table("output.counts", header = TRUE, sep = "",row.names = 1)
@@ -90,7 +90,7 @@ write.csv(significative_DEgenes, "significative_DEgenes.csv")
 top_10=significative_DEgenes[1:10, ]
 write.csv(top_10,"top_10_de_genes.csv")
 
-## Table -----------------------------------------------------------------------
+## Summary table -----------------------------------------------------------------
 
 summary.df = as.data.frame(matrix("", ncol= 2, nrow = 2))  # DataFrame whose summarise previous matrix
 rownames(summary.df) = c("overexpressed genes in Wild Types", "overexpressed genes in Mutants")
@@ -101,3 +101,5 @@ summary.df[2,1] = length(which(significative_DEgenes$log2FoldChange > 1)) #overe
 
 summary.df[1,2] = round(as.numeric(summary.df[1,1]) / tot, digits = 2)
 summary.df[2,2] = round(as.numeric(summary.df[2,1]) / tot, digits = 2)
+summary.df
+write.csv(summary.df, "summary.csv")
