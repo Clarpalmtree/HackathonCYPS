@@ -3,7 +3,7 @@
 <br>
 <div align="justify">
   <p>
-    Dans le cadre de notre formation en M2 AMI2B à l'Université Paris-Saclay, nous avons été amenés à réaliser un workflow d'analyses RNA-Seq pour l'UE Hackathon     Reproductible. L'objectif de ce projet consiste à reproduire les résultats des analyses décrites dans ces deux articles :
+    Dans le cadre de notre formation en M2 AMI2B à l'Université Paris-Saclay, nous avons été amenés à réaliser un workflow d'analyses RNA-Seq pour l'UE Hackathon Reproductible. L'objectif de ce projet consiste à reproduire les résultats des analyses décrites dans ces deux articles :
     
    * [Recurrent mutations at codon 625 of the splicing factor SF3B1 in uveal melanoma](https://pubmed.ncbi.nlm.nih.gov/23313955), Harbour et al. (2013)
    * [SF3B1 mutations are associated with alternative splicing in uveal melanoma](https://pubmed.ncbi.nlm.nih.gov/23861464), Marais et al. (2013)
@@ -14,7 +14,7 @@
 
 <div align="justify">
   <p>
-    Le workflow s'exécute dans Nextflow et fait appel à Docker pour les conteneurs. Nextflow est lancé depuis Conda (Bioconda). Pour exécuter le workflow, il faut     donc au préalable avoir installé Conda, Nextflow et Docker sur sa machine. La configuration du workflow proposée nécessite d'avoir au minimum 16 CPUs et 50 GB     de mémoire vive.  <br>
+    Le workflow s'exécute dans Nextflow et fait appel à Docker pour les conteneurs. Nextflow est lancé depuis Conda (Bioconda). Pour exécuter le workflow, il faut donc au préalable avoir installé Conda, Nextflow et Docker sur sa machine. La configuration actuelle du workflow proposée et la grande dimension du jeu de données nécessitent un noeud de calcul ou bien un machine avec au minimum 16 CPUs et 50 GB de mémoire vive.  <br>
     Procédure à suivre pour lancer le workflow :  <br>
     Commencer par récupérer les différents scripts et accorder les permissions au répertoire bin :
     
@@ -45,9 +45,12 @@
 <div align="left"><h2>Matériels</h2></div>
 <div align="justify">
   <p> 
-  Comme expliqué précédemment, le workflow que nous proposons utilise [Nextflow](https://nextflow.io/) comme Workflow Management System. Nextflow peut être lancé   depuis [Conda](https://conda.io).
+
+  **Outils informatiques**
+
+  Nextflow (https://nextflow.io/) est utilisé comme Workflow Management System. Nextflow peut être lancé depuis [Conda](https://conda.io). Afin d'assurer la reproductibilité des résultats, les images des différentes applications ont été générées via Docker.
     
-  Les [Dockers](https://www.docker.com/en) utilisés sont : 
+  Les images [Dockers](https://www.docker.com/en) utilisées sont : 
      
    * [yanismadi/samtools](https://hub.docker.com/r/yanismadi/samtools) (version 1.9) : créer l'index de référence et réaliser le mapping des reads
    * [clarpalmtree/starbis](https://hub.docker.com/r/clarpalmtree/starbis) (version 2.7.10a) : pour indexer le mapping
@@ -56,7 +59,12 @@
    * [yanismadi/subread](https://hub.docker.com/r/yanismadi/subread) (version 2.0.0) : pour faire la matrice de comptage
    * [siwarhm/dseq2](https://hub.docker.com/r/siwarhm/dseq2) (version current) : pour faire l'analyse statistique
   
+  Ce pipeline est essentiellement codé en Bash et en R.
+
+  **Données biologiques**
+
   Les données biologiques utilisées dans notre étude sont accessibles depuis le site du NCBI (https://www.ncbi.nlm.nih.gov/sra?term=SRA062359). Les échantillons sélectionnés sont les échantillons de type "Transcriptome sequencing" et leurs ID sont stockés dans le fichier [SraAccList_SRA062359.txt](https://github.com//Clarpalmtree/HackathonCYPS/blob/main/SraAccList_SRA062359.txt).
+  Il s'agit de traiter des données de séquençage transcriptomique de tumeur, de mélanome uvéal plus précisément. Le séquençage a été réalisé avec une Illumina HiSeq 2000.
   </p>
 </div>
 
