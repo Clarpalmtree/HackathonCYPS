@@ -32,14 +32,12 @@
   <p>
   
   Les fichiers issus de notre analyses des données sont observables dans le dossier `/analysis` : 
-  
-  * `PCA_GraphOfIndividuals.pdf` : graphe PCA
-  * `plot_counts.pdf` : graphe du nombre de comptages normalisé du gène le plus différentiellement exprimé pour les deux phénotypes
-  * `heatmap_MostVariableGenes.pdf` : heatmap des comptages normalisés des 30 gènes les plus différentiellement exprimés entre les deux phénotypes
-  * `DESeq_results.txt` : matrice de résultats de l’analyse d’expression différentielle
-  * `MostVariableGenes.txt` : liste ordonnée des 30 gènes les plus différentiellement exprimés
-  * `Significative_DEgenes.txt` : matrice contenant en ligne les gènes significativement différemment exprimées et en colonne les valeurs de log2FC et de lap-          value ajustée pour chacun de ces gènes
-  * `Significative_DEgenes_Summary.txt` : tableau récapitualtif de la matrice Significative_DEgenes indiquant le nombre et ratio des gènes significativement            différentiellement exprimés ainsi que leur ratio
+  * `PCA_DE.png` : graphe PCA des 8 échantillons
+  * `heatmap_de.png` : heatmap des 8 échantillons
+  * `DESeq_results.csv` : fichier csv avec les ID de gène, le log Fold Change et la p-value correspondante.
+  * `significative_DEgenes.csv` : fichier csv avec les gènes significativement différentiellement exprimés ordonnés par ordre de p-value ajustée.
+  * `top_10_de_genes.csv` : fichier csv avec les 10 gènes les plus significativement différentiellement exprimés ordonnés par ordre de p-value ajustée.
+  * `summary.csv` : fichier csv résumant les gènes différentiellement exprimés chez les échantillons Wild Type ou mutants.
   </p>
 </div>
 
