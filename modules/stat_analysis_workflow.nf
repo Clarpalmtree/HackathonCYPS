@@ -7,11 +7,14 @@ process stat_analysis {
     publishDir params.resultdir, mode: 'copy'
 
     input:
-    file 'output.counts'
+        file 'output.counts'
 
     output:
-    tuple file('PCA_GraphOfIndividuals.pdf'), file('DESeq_results.txt'), file('plot_counts.pdf'), file ('heatmap_MostVariableGenes.pdf'), file ('MostVariableGenes.txt'),
-          file ('Significative_DEgenes.txt'), file('Significative_DEgenes_Summary.txt') //Récupère les résultats de l'analyse statistique
+        file 'PCA_DE.png'
+        file 'heatmap_de.png'
+        file 'DESeq_results.csv'
+        file 'significative_DEgenes.csv'
+        file 'top_10_de_genes.csv'
 
     script:
     """
