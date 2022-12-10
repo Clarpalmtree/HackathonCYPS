@@ -1,13 +1,10 @@
-FROM pegi3s/r_project:4.1.1
+# R + DESeq
+# https://cran.r-project.org/
+# v4.0.2 / v1.39.0
+FROM r-base:4.0.2
 
-RUN apt-get install -y gfortran libblas-dev liblapack-dev && \
-    apt install -y libxml2-dev  && \
-    R -e "install.packages('XML')"  && \
-    apt install -y libcurl4-openssl-dev  && \
-    R -e "install.packages('RCurl')"  && \
-    apt install -y libssl-dev  && \
-    R -e "install.packages('httr')"  && \
-    apt install -y libpng-dev  && \
-    R -e "install.packages('png')"
+RUN apt-get update && apt-get install -y procps libssl-dev libcurl4-gnutls-dev curl git libopenmpi-dev openmpi-bin openmpi-doc libxm>    && R -e 'if (!requireNamespace("BiocManager", quietly = TRUE)){install.packages("BiocManager")}' \
+    && R -e 'BiocManager::install("DESeq2")' \
+    && R -e 'BiocManager::install("FactoMineR")'
 
-RUN R -e "install.packages('BiocManager'); library('BiocManager'); BiocManager::install('DESeq2')"
+ENTRYPOINT ["/usr/bin/R"]
