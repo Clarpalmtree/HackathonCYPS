@@ -56,7 +56,7 @@
    * [yanismadi/subread](https://hub.docker.com/r/yanismadi/subread) (version 2.0.0) : pour faire la matrice de comptage
    * [siwarhm/dseq2](https://hub.docker.com/r/siwarhm/dseq2) (version current) : pour faire l'analyse statistique
   
-  Les données biologiques utilisées dans notre étude sont celles des SRR contenues dans le fichier [SraAccList_SRA062359.txt](https://github.com//Clarpalmtree/HackathonCYPS/blob/main/SraAccList_SRA062359.txt).
+  Les données biologiques utilisées dans notre étude sont accessibles depuis le site du NCBI (https://www.ncbi.nlm.nih.gov/sra?term=SRA062359). Les échantillons sélectionnés sont les échantillons de type "Transcriptome sequencing" et leurs ID sont stockés dans le fichier [SraAccList_SRA062359.txt](https://github.com//Clarpalmtree/HackathonCYPS/blob/main/SraAccList_SRA062359.txt).
   </p>
 </div>
 
