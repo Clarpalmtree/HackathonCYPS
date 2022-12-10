@@ -15,6 +15,7 @@ process stat_analysis {
         file 'DESeq_results.csv'
         file 'significative_DEgenes.csv'
         file 'top_10_de_genes.csv'
+        file 'summary.csv'
 
     script:
     """
