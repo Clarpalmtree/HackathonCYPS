@@ -18,7 +18,7 @@
     Procédure à suivre pour lancer le workflow :  <br>
     Commencer par récupérer les différents scripts et accorder les permissions au répertoire bin :
     
-    $ git clone git@github.com:github.com/Clarpalmtree/HackathonCYPS.git
+    $ git clone https://github.com/Clarpalmtree/HackathonCYPS/
     $ sudo chmod -R a+rwx bin
   
    Puis activer Conda et lancer le workflow : 
