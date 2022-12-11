@@ -20,19 +20,19 @@
   **Installation**
 
   Le workflow s'exécute dans Nextflow et fait appel à Docker pour les conteneurs. Nextflow est lancé depuis Conda (Bioconda). Pour exécuter le workflow, il faut donc au préalable avoir installé Conda, Nextflow et Docker sur sa machine. <br>
-  
-  Procédure à suivre pour lancer le workflow :  <br>
+  <br>
+  **Procédure à suivre pour lancer le workflow** <br>
 
   Commencez par récupérer les différents scripts et accorder les permissions au répertoire bin :
   
-  $ git clone https://github.com/Clarpalmtree/HackathonCYPS/
-  $ cd HackathonCYPS/
-  $ sudo chmod -R a+rwx bin
+    $ git clone https://github.com/Clarpalmtree/HackathonCYPS/
+    $ cd HackathonCYPS/
+    $ sudo chmod -R a+rwx bin
 
   Puis activez Conda et lancez le workflow : 
   
-  $ conda activate nextflow
-  $ nextflow run main.nf
+    $ conda activate nextflow
+    $ nextflow run main.nf
 
   Attention, afin que l'analyse statistique se déroule correctement, veuillez vous assurer que le fichier `metaData.txt` se retrouve bien dans votre répertoire de travail.
   
