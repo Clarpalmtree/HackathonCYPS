@@ -65,7 +65,7 @@
      
    * [yanismadi/samtools](https://hub.docker.com/r/yanismadi/samtools) (version 1.9) 
    * [clarpalmtree/starbis](https://hub.docker.com/r/clarpalmtree/starbis) (version 2.7.10a)
-   * [clarpalmtree/sra](https://hub.docker.com/r/clarpalmtree/sra) (version current) 
+   * [clarpalmtree/sra](https://hub.docker.com/r/clarpalmtree/sra) (version 4.2.1) 
    * [yanismadi/subread](https://hub.docker.com/r/yanismadi/subread) (version 2.0.0)
    * [evolbioinfo/deseq2](https://hub.docker.com/r/evolbioinfo/deseq2) (version 1.28.1)
   
