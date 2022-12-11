@@ -11,28 +11,36 @@
 </div>
 
 <div align="left"><h2>Utilisation du workflow</h2></div>
-
 <div align="justify">
   <p>
-    Le workflow s'exécute dans Nextflow et fait appel à Docker pour les conteneurs. Nextflow est lancé depuis Conda (Bioconda). Pour exécuter le workflow, il faut donc au préalable avoir installé Conda, Nextflow et Docker sur sa machine. La configuration actuelle du workflow proposée et la grande dimension du jeu de données nécessitent un noeud de calcul ou bien un machine avec au minimum 16 CPUs et 50 GB de mémoire vive.  <br>
-    Procédure à suivre pour lancer le workflow :  <br>
-    Commencer par récupérer les différents scripts et accorder les permissions au répertoire bin :
-    
-    $ git clone https://github.com/Clarpalmtree/HackathonCYPS/
-    $ cd HackathonCYPS/
-    $ sudo chmod -R a+rwx bin
+
+  **Prérequis** 
+  La configuration actuelle du workflow proposée et la grande dimension du jeu de données nécessitent un noeud de calcul ou bien un machine avec au minimum 16 CPUs et 50 GB de mémoire vive.  
   
-   Puis activer Conda et lancer le workflow : 
-    
-    $ conda activate nextflow
-    $ nextflow run main.nf
+  **Installation**
+
+  Le workflow s'exécute dans Nextflow et fait appel à Docker pour les conteneurs. Nextflow est lancé depuis Conda (Bioconda). Pour exécuter le workflow, il faut donc au préalable avoir installé Conda, Nextflow et Docker sur sa machine. <br>
+  
+  Procédure à suivre pour lancer le workflow :  <br>
+
+  Commencez par récupérer les différents scripts et accorder les permissions au répertoire bin :
+  
+  $ git clone https://github.com/Clarpalmtree/HackathonCYPS/
+  $ cd HackathonCYPS/
+  $ sudo chmod -R a+rwx bin
+
+  Puis activez Conda et lancez le workflow : 
+  
+  $ conda activate nextflow
+  $ nextflow run main.nf
+  
   </p>
 </div>
 
 <div align="left"><h2>Résultats</h2></div>
   <p>
   
-  Les fichiers issus de notre analyses des données sont observables dans le dossier `/stat_analysis` : 
+  Les fichiers issus de notre analyse des données sont retrouvables dans le dossier `/stat_analysis` : 
   * `PCA_DE.png` : graphe PCA des 8 échantillons
   * `heatmap_de.png` : heatmap des 8 échantillons
   * `DESeq_results.csv` : fichier csv avec les ID de gène, le log Fold Change et la p-value correspondante.
@@ -49,23 +57,21 @@
 
   **Outils informatiques**
 
-  Nextflow (https://nextflow.io/) est utilisé comme Workflow Management System. Nextflow peut être lancé depuis [Conda](https://conda.io). Afin d'assurer la reproductibilité des résultats, les images des différentes applications ont été générées via Docker.
+  Ce pipeline est essentiellement codé en Bash et en R. Les différentes applications utilisées sont : STAR, FastQC, Samtools, FastQ-Dump, featureCounts. Nextflow (https://nextflow.io/) est utilisé comme Workflow Management System. Nextflow peut être lancé depuis [Conda](https://conda.io). Afin d'assurer la reproductibilité des résultats, les images des différentes applications ont été générées via Docker.
     
   Les images [Dockers](https://www.docker.com/en) utilisées sont : 
      
-   * [yanismadi/samtools](https://hub.docker.com/r/yanismadi/samtools) (version 1.9) : créer l'index de référence et réaliser le mapping des reads
-   * [clarpalmtree/starbis](https://hub.docker.com/r/clarpalmtree/starbis) (version 2.7.10a) : pour indexer le mapping
-   * [clarpalmtree/sra](https://hub.docker.com/r/clarpalmtree/sra) (version current) : pour récuperer les fichiers fastq, associer les reads 1 et 2
-   * [yanismadi/fastqc](https://hub.docker.com/r/yanismadi/fastqc) (version 0.11.9) : pour faire un contrôle qualité
-   * [yanismadi/subread](https://hub.docker.com/r/yanismadi/subread) (version 2.0.0) : pour faire la matrice de comptage
-   * [siwarhm/dseq2](https://hub.docker.com/r/siwarhm/dseq2) (version current) : pour faire l'analyse statistique
+   * [yanismadi/samtools](https://hub.docker.com/r/yanismadi/samtools) (version 1.9) 
+   * [clarpalmtree/starbis](https://hub.docker.com/r/clarpalmtree/starbis) (version 2.7.10a)
+   * [clarpalmtree/sra](https://hub.docker.com/r/clarpalmtree/sra) (version current) 
+   * [yanismadi/fastqc](https://hub.docker.com/r/yanismadi/fastqc) (version 0.11.9)
+   * [yanismadi/subread](https://hub.docker.com/r/yanismadi/subread) (version 2.0.0)
+   * [siwarhm/dseq2](https://hub.docker.com/r/siwarhm/dseq2) (version current)
   
-  Ce pipeline est essentiellement codé en Bash et en R.
-
+  
   **Données biologiques**
 
-  Les données biologiques utilisées dans notre étude sont accessibles depuis le site du NCBI (https://www.ncbi.nlm.nih.gov/sra?term=SRA062359). Les échantillons sélectionnés sont les échantillons de type "Transcriptome sequencing" et leurs ID sont stockés dans le fichier [SraAccList_SRA062359.txt](https://github.com//Clarpalmtree/HackathonCYPS/blob/main/SraAccList_SRA062359.txt).
-  Il s'agit de traiter des données de séquençage transcriptomique de tumeur, de mélanome uvéal plus précisément. Le séquençage a été réalisé avec une Illumina HiSeq 2000.
+  Les données biologiques utilisées dans notre étude sont accessibles depuis le site du NCBI (https://www.ncbi.nlm.nih.gov/sra?term=SRA062359). Les échantillons sélectionnés sont les échantillons de type "Transcriptome sequencing" et leurs ID sont répertoriés dans le fichier [SraAccList_SRA062359.txt](https://github.com//Clarpalmtree/HackathonCYPS/blob/main/SraAccList_SRA062359.txt). Il s'agit de traiter des données de séquençage transcriptomique de tumeur, de mélanome uvéal plus précisément. Le séquençage a été réalisé avec un Illumina HiSeq 2000.
   </p>
 </div>
 
@@ -74,6 +80,12 @@
 
 <div align="justify">
   <p>
-Clara Toussaint, Pauline Lim, Siwar Hammami, Yanis Madi
+  Ce projet a été réalisé en collaboration : 
+  
+  * Siwar Hammami (https://github.com/siwarHm)
+  * Pauline Lim (https://github.com/plim2021)
+  * Yanis Madi (https://github.com/YanisMadi)
+  * Clara Toussaint (https://github.com/Clarpalmtree)
+
   </p>
 </div>
