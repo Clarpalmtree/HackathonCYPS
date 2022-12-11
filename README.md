@@ -32,7 +32,7 @@
 <div align="left"><h2>Résultats</h2></div>
   <p>
   
-  Les fichiers issus de notre analyses des données sont observables dans le dossier `/analysis` : 
+  Les fichiers issus de notre analyses des données sont observables dans le dossier `/stat_analysis` : 
   * `PCA_DE.png` : graphe PCA des 8 échantillons
   * `heatmap_de.png` : heatmap des 8 échantillons
   * `DESeq_results.csv` : fichier csv avec les ID de gène, le log Fold Change et la p-value correspondante.
