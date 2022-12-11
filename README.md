@@ -33,6 +33,8 @@
   
   $ conda activate nextflow
   $ nextflow run main.nf
+
+  Attention, afin que l'analyse statistique se déroule correctement, veuillez vous assurer que le fichier `metaData.txt` se retrouve bien dans votre répertoire de travail.
   
   </p>
 </div>
