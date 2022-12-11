@@ -9,20 +9,20 @@ params.resultdir4 = 'annotation' // results output directory
 params.resultdir5 = 'index' // results output directory
 
 process getSRAIDs {
-        // Getting SRA IDs of data of interest in a txt file
+    // Getting SRA IDs of data of interest in a txt file
 
-        publishDir params.resultdir, mode: 'copy' 
+    publishDir params.resultdir, mode: 'copy' 
 
-        input:
-        val projectid
+    input:
+    val projectid
 
-        output:
-        file 'sra.txt'
+    output:
+    file 'sra.txt'
 
-        script:
-        """
-        esearch -db sra -query $projectid  | efetch --format runinfo | grep TRANSCRIPTOMIC | cut -d ',' -f 1 > sra.txt
-        """
+    script:
+    """
+    esearch -db sra -query $projectid  | efetch --format runinfo | grep TRANSCRIPTOMIC | cut -d ',' -f 1 > sra.txt
+    """
 }
 
 process getSRA {
@@ -42,22 +42,22 @@ process getSRA {
 }
 
 process fastqDump {
-        // Downloading fastq files
+    // Downloading fastq files
 
-        publishDir params.resultdir2, mode: 'copy'
+    publishDir params.resultdir2, mode: 'copy'
 
-        input:
-        val id
-        file sra_file
+    input:
+    val id
+    file sra_file
 
-        output:
-        tuple val(id), path("*_1.fastq"), path("*_2.fastq")
+    output:
+    tuple val(id), path("*_1.fastq"), path("*_2.fastq")
 
-        script:
-        """
-        fastq-dump --gzip --split-files ${sra_file}
-	    gunzip *.fastq.gz
-        """
+    script:
+    """
+    fastq-dump --gzip --split-files ${sra_file}
+    gunzip *.fastq.gz
+    """
 }
 
 process getGenome {
@@ -112,7 +112,6 @@ process index{
 
 workflow COLLECT {
     
-
     main:
         // Getting sra ids
         getSRAIDs(params.project)
@@ -122,16 +121,16 @@ workflow COLLECT {
         // Testing with only 2 samples
         // sraID=Channel.from('SRR628582','SRR628583')
 
-        // get sra files
+        // Getting sra files
         getSRA(sraID)
 
-        // get fastq files
+        // Getting fastq files
         fastq=fastqDump(sraID,getSRA.out)
 
-        // get chromosome files and reference genome
+        // Getting chromosome files and reference genome
         getGenome()
 
-        //annotation file
+        // Annotation file
         annot=getAnnot()
 
         // Indexation
@@ -140,6 +139,6 @@ workflow COLLECT {
         emit:
         fastq
         ind
-	annot
+	    annot
 
 }
