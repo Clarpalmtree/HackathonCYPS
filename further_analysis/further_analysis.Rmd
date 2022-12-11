@@ -1,0 +1,263 @@
+---
+title: "Further Analysis"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+## Packages
+
+```{r}
+BiocManager::install(c("DESeq2","pheatmap","tidyverse","FactoMineR","apeglm","RColorBrewer","ggrepel","EnhancedVolcano","magrittr","dplyr","ggplot2","plotly","factoextra"))
+```
+
+```{r}
+library("DESeq2")
+library("pheatmap")
+library("factoextra")
+library("tidyverse")
+library("FactoMineR")
+library("apeglm")
+library ("RColorBrewer") 
+library("ggrepel")
+library("EnhancedVolcano")
+library("magrittr") # needs to be run every time you start R and want to use %>%
+library("dplyr")    # alternatively, this also loads %>%
+library("ggplot2")
+library("plotly")
+```
+
+## Data
+
+### Loading Data
+
+```{r}
+meta<-read.table("metaData.txt", header = TRUE, sep = ",",row.names = 1)
+Counts<-read.table("output.counts", header = TRUE, sep = "",row.names = 1)
+head(meta)
+head(Counts)
+```
+
+### Data formatting and Data cleaning
+```{r}
+## Dataframe
+# Removing the first 5 columns (unecessary for analysis) 
+new_Counts= Counts[,-c(1:5)]
+# Removing ".bam" extension in column names
+colnames(new_Counts)[c(1:dim(new_Counts)[2])] = gsub('.{0,4}$', '', colnames(new_Counts)[c(1:dim(new_Counts)[2])])
+# Sorting in order : 
+new_Counts<-new_Counts[,rownames(meta)]
+
+print(">> Is data correctly sorted as in metadata ?")
+print(all(rownames(meta) == colnames(new_Counts)))
+
+## Labels
+# Getting samples ID
+labels=c()
+for (i in colnames(new_Counts)){
+  labels <- c(labels,i)
+}
+# Getting mutation status
+mutations=c()
+for (label in labels){
+  mutations <-c(mutations,meta[label,"Type"])
+}
+# Sample ID and tissue type correspondance
+labels2 = data.frame(labels, mutations)
+labels2$mutations<-factor(labels2$mutations,levels=c("WT","M"))
+
+## Removal of all unexpressed genes
+dds <- DESeqDataSetFromMatrix(countData=new_Counts, colData=labels2, design= ~ mutations)
+dds <- DESeq(dds) # Levels: WT M
+res <- results(dds)
+
+print("Summary for removing genes")
+print(summary(res))
+
+new_Counts = new_Counts[rowSums(new_Counts)>0,]   
+new_Counts = as.matrix(new_Counts) 
+new_Counts <- data.frame(new_Counts)
+
+head(new_Counts)
+
+## Cleaning Data from 'NA' values
+res <- results(dds)
+res <- results(dds,contrast = c("mutations","M","WT"))
+
+
+mcols(res, use.names=T)
+res_NO_NA<-res[complete.cases(res[,6]),]
+
+
+```
+
+## I. RNAseq count distribution
+```{r}
+# I- RNA-seq count distribution ------------------------------------------------
+
+hist=ggplot(new_Counts) +geom_histogram(aes(x =SRR628582), stat = "bin", bins = 200) + xlim(-5, 500)  +xlab("Raw expression counts") + ylab("Number of genes")
+plot(hist)
+# png("rawcount_vs_nbgene.png",width=600)
+# plot(hist)
+# dev.off()
+```
+
+### Handling data
+```{r}
+## Modeling count data for Mutated samples -------------------------------------
+
+## Getting mutated samples ID
+mut_samples=c()
+for (i in (1:dim(labels2)[1])){
+  if(labels2[i,][2]=="M"){
+    mut_samples<-c(mut_samples,as.character(labels2[i,][1]))
+  }
+}
+## Graph
+mean_counts <- apply(new_Counts[mut_samples], 1, mean)
+variance_counts <- apply(new_Counts[mut_samples], 1, var)
+df <- data.frame(mean_counts, variance_counts)
+Disp=ggplot(df) + geom_point(aes(x=mean_counts, y=variance_counts)) + geom_line(aes(x=mean_counts, y=mean_counts, color="red")) + scale_y_log10() + scale_x_log10()
+# exporting figure
+plot(Disp)
+# png("MeanVariance_Mutatedsamples.png")
+# plot(Disp)
+# dev.off()
+
+## Modeling count data for WT samples ------------------------------------------
+
+## Getting WT samples ID
+wt_samples=c()
+for (i in (1:dim(labels2)[1])){
+  if(labels2[i,][2]=="WT"){
+    wt_samples<-c(wt_samples,as.character(labels2[i,][1]))
+  }
+}
+## Graph
+mean_counts <- apply(new_Counts[wt_samples], 1, mean)
+variance_counts <- apply(new_Counts[wt_samples], 1, var)
+df <- data.frame(mean_counts, variance_counts)
+Disp=ggplot(df) + geom_point(aes(x=mean_counts, y=variance_counts)) + geom_line(aes(x=mean_counts, y=mean_counts, color="red")) + scale_y_log10() + scale_x_log10()
+plot(Disp)
+# exporting figure
+# png("MeanVariance_WTsamples.png")
+# plot(Disp)
+# dev.off()
+```
+
+## II - Differential Analysis 
+
+
+```{r}
+## ACP -------------------------------------------------------------------------
+
+tran_data<-t(new_Counts)
+res_pca<-PCA(tran_data,graph = FALSE)
+#res_pca$eig
+plot_pca=fviz_pca_ind (res_pca,
+                       repel = TRUE,
+                       col.ind = mutations, # coloring by tissue type
+                       palette = c("#009999", "#0000FF"),
+                       legend.title = "Sample Type",
+                       addEllipses = TRUE,
+                       ellipse.level=0.95,
+                       mean.point = FALSE)
+vsdata <- vst(dds, blind=FALSE)
+plotPCA(vsdata, intgroup="mutations")
+# png("PCA_DE.png",width=600)
+# plotPCA(vsdata, intgroup="mutations")
+# dev.off()
+plot(plot_pca)
+# png("PCA.png",width=600)
+# plot(plot_pca)
+# dev.off()
+```
+
+## Heatmap
+
+```{r}
+## Data
+#Transform normalized counts using the rlog transformation
+rld<-rlog(dds,blind=TRUE)
+# Extract the rlog matrix from the object
+rld_mat <- assay(rld)
+# Compute pairwise correlation values
+rld_cor <- cor(rld_mat)
+
+## Plot heatmap
+heat.colors <- brewer.pal(6, "Purples")
+# exporting figure
+heatmap=pheatmap(rld_cor, color = heat.colors, border_color=NA, fontsize = 10,
+                 fontsize_row = 10, height=20)
+# png("heatmap.png",width=600)
+# heatmap=pheatmap(rld_cor, color = heat.colors, border_color=NA, fontsize = 10,
+#                  fontsize_row = 10, height=20)
+# dev.off()
+```
+
+
+```{r}
+## Parameters
+p_adj<-0.05
+LFC<-0.5
+res_sig<-res_NO_NA%>%data.frame() %>%rownames_to_column(var="gene") %>% as_tibble()
+sig_DE_gene <- res_sig %>%filter(padj < p_adj & abs(log2FoldChange) >LFC)
+sig_DE_gene
+summary(sig_DE_gene)
+## CSV of DE genes
+#write.csv(sig_DE_gene, file="genes_de_sig.csv", row.names = FALSE )
+
+```
+
+### Pvalue
+
+```{r}
+## Pvalue histogram
+hist(res_sig$pvalue)
+# exporting
+# png("histogram_pvalue.png")
+# hist(res_sig$pvalue)
+# dev.off()
+```
+
+### Volcano plot
+```{r}
+## VOLCANO ---------------------------------------------------------------------
+
+## get top 10 genes
+top10_sigDE_genes <- sig_DE_gene %>% data.frame() %>%arrange(padj) %>% pull(gene) %>% head(n=10) 
+info_top_10_gene<- res_sig %>%filter(padj < p_adj & abs(log2FoldChange) >LFC)  %>%arrange(padj) %>% head(n=10)
+DF_to_10_gene<-as.data.frame(info_top_10_gene)
+DF_to_10_gene
+## CSV of Top 10 DE genes
+# write.csv(DF_to_10_gene, file="DE_TOP_10.csv", row.names = FALSE )
+
+## Volcano graph
+lab_italics <- paste0("italic('", rownames(res_NO_NA), "')")
+selectLab_italics = paste0("italic('",c(top10_sigDE_genes),"')")
+# png("volcano.png",width= 700, height = 500)
+EnhancedVolcano(res_NO_NA,
+                lab = lab_italics,
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                title='WT vs Mutated with p_adj',
+                selectLab = selectLab_italics,
+                xlab = bquote(~Log[2]~ 'fold change'),
+                pCutoff = p_adj,
+                FCcutoff = LFC,
+                pointSize = 3.0,
+                labSize = 6.0,
+                labCol = 'black',
+                labFace = 'bold',
+                boxedLabels = TRUE,
+                parseLabels = TRUE,
+                col = c('purple', 'red3', 'black', 'pink'),
+                colAlpha = 4/5,
+                legendPosition = 'bottom',
+                legendLabSize = 14,
+                legendIconSize = 4.0,
+                drawConnectors = TRUE,
+                widthConnectors = 1.0,
+                colConnectors = 'black') + coord_flip()
+# dev.off()
+```
+
