@@ -25,7 +25,7 @@
    Puis activer Conda et lancer le workflow : 
     
     $ conda activate nextflow
-    $ nextflow run main.nf -resume
+    $ nextflow run main.nf
   </p>
 </div>
 
