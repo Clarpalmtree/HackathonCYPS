@@ -113,32 +113,31 @@ process index{
 workflow COLLECT {
     
     main:
-        // Getting sra ids
-        getSRAIDs(params.project)
-        sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
-        sraID.view()
+    // Getting sra ids
+    getSRAIDs(params.project)
+    sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
+    sraID.view()
+    // Testing with only 2 samples
+    // sraID=Channel.from('SRR628582','SRR628583')
 
-        // Testing with only 2 samples
-        // sraID=Channel.from('SRR628582','SRR628583')
+    // Getting sra files
+    getSRA(sraID)
 
-        // Getting sra files
-        getSRA(sraID)
+    // Getting fastq files
+    fastq=fastqDump(sraID,getSRA.out)
 
-        // Getting fastq files
-        fastq=fastqDump(sraID,getSRA.out)
+    // Getting chromosome files and reference genome
+    getGenome()
 
-        // Getting chromosome files and reference genome
-        getGenome()
+    // Annotation file
+    annot=getAnnot()
 
-        // Annotation file
-        annot=getAnnot()
+    // Indexation
+    ind=index(getGenome.out, getAnnot.out)
 
-        // Indexation
-        ind=index(getGenome.out, getAnnot.out)
-
-        emit:
-        fastq
-        ind
-	    annot
+    emit:
+    fastq
+    ind
+    annot
 
 }
