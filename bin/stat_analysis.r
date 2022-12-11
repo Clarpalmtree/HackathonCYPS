@@ -94,8 +94,8 @@ summary.df = as.data.frame(matrix("", ncol= 2, nrow = 2))  # DataFrame whose sum
 rownames(summary.df) = c("overexpressed genes in Wild Types", "overexpressed genes in Mutants")
 colnames(summary.df) = c("Amount", "Ratio (significantly differentially expressed)")
 tot = dim(significative_DEgenes)[1]
-summary.df[1,1] = length(which(significative_DEgenes$log2FoldChange < -1)) #overexpressed in WT
-summary.df[2,1] = length(which(significative_DEgenes$log2FoldChange > 1)) #overexpressed in M
+summary.df[1,1] = length(which(significative_DEgenes$log2FoldChange < 0)) #overexpressed in WT
+summary.df[2,1] = length(which(significative_DEgenes$log2FoldChange > 0)) #overexpressed in M
 summary.df[1,2] = round(as.numeric(summary.df[1,1]) / tot, digits = 2)
 summary.df[2,2] = round(as.numeric(summary.df[2,1]) / tot, digits = 2)
 #export
