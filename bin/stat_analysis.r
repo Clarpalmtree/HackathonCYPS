@@ -11,7 +11,7 @@ counts_file = args[1]
 dir = args[2]
 
 meta<-read.table(paste(dir, "/metaData.txt", sep=""), header = TRUE, sep = ",",row.names = 1)
-Counts = read.table(paste(dir, "/output.counts", sep=""), header=T)    # Loading count matrix file
+Counts = read.table(paste(dir, "/count/output.counts", sep=""), header=T)    # Loading count matrix file
 # ## DATA ------------------------------------------------------------------------
 # meta<-read.table("metaData.txt", header = TRUE, sep = ",",row.names = 1)
 # Counts<-read.table("output.counts", header = TRUE, sep = "",row.names = 1)
