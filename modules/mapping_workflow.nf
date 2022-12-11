@@ -7,6 +7,7 @@ params.resultdir2 = 'mapping_bai' // bam.bai directory
 params.resultdir3 = 'count' // couting matrix directory
 
 process mapping {
+    // Mapping reads with STAR
     publishDir params.resultdir, mode: 'copy'
 
     input:
@@ -23,7 +24,7 @@ process mapping {
 }
 
 process mapping_bai {
-
+    // Indexing bam fils with samtools
 	publishDir params.resultdir2, mode: 'copy'
 	
 	input:
@@ -39,7 +40,7 @@ process mapping_bai {
 }
 
 process featureCounts {
-
+    // Getting counting matrix with feartureCounts
     publishDir params.resultdir3, mode: 'copy'
 
     input:
@@ -57,7 +58,7 @@ process featureCounts {
 }
 
 workflow MAPPING {
-    
+
     take:
     fastq_files
     index_files
