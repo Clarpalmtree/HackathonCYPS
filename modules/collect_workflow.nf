@@ -9,20 +9,20 @@ params.resultdir4 = 'annotation' // results output directory
 params.resultdir5 = 'index' // results output directory
 
 process getSRAIDs {
-        // Getting SRA IDs of data of interest in a txt file
+    // Getting SRA IDs of data of interest in a txt file
 
-        publishDir params.resultdir, mode: 'copy' 
+    publishDir params.resultdir, mode: 'copy' 
 
-        input:
-        val projectid
+    input:
+    val projectid
 
-        output:
-        file 'sra.txt'
+    output:
+    file 'sra.txt'
 
-        script:
-        """
-        esearch -db sra -query $projectid  | efetch --format runinfo | grep TRANSCRIPTOMIC | cut -d ',' -f 1 > sra.txt
-        """
+    script:
+    """
+    esearch -db sra -query $projectid  | efetch --format runinfo | grep TRANSCRIPTOMIC | cut -d ',' -f 1 > sra.txt
+    """
 }
 
 process getSRA {
@@ -42,22 +42,22 @@ process getSRA {
 }
 
 process fastqDump {
-        // Downloading fastq files
+    // Downloading fastq files
 
-        publishDir params.resultdir2, mode: 'copy'
+    publishDir params.resultdir2, mode: 'copy'
 
-        input:
-        val id
-        file sra_file
+    input:
+    val id
+    file sra_file
 
-        output:
-        tuple val(id), path("*_1.fastq"), path("*_2.fastq")
+    output:
+    tuple val(id), path("*_1.fastq"), path("*_2.fastq")
 
-        script:
-        """
-        fastq-dump --gzip --split-files ${sra_file}
-	    gunzip *.fastq.gz
-        """
+    script:
+    """
+    fastq-dump --gzip --split-files ${sra_file}
+    gunzip *.fastq.gz
+    """
 }
 
 process getGenome {
@@ -85,7 +85,8 @@ process getAnnot {
     """
     #Getting genome annotations
     wget ftp://ftp.ensembl.org/pub/release-101/gtf/homo_sapiens/Homo_sapiens.GRCh38.101.chr.gtf.gz
-    gzip -d Homo_sapiens.GRCh38.101.chr.gtf.gz
+    gunzip -c Homo_sapiens.GRCh38.101.chr.gtf.gz > Homo_sapiens.GRCh38.101.chr.gtf
+    rm Homo_sapiens.GRCh38.101.chr.gtf.gz
     """
 }
 
@@ -111,34 +112,32 @@ process index{
 
 workflow COLLECT {
     
-
     main:
-        // Getting sra ids
-        getSRAIDs(params.project)
-        sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
-        sraID.view()
+    // Getting sra ids
+    getSRAIDs(params.project)
+    sraID = getSRAIDs.out.splitText().map { it -> it.trim() }
+    sraID.view()
+    // Testing with only 2 samples
+    // sraID=Channel.from('SRR628582','SRR628583')
 
-        // Testing with only 2 samples
-        // sraID=Channel.from('SRR628582','SRR628583')
+    // Getting sra files
+    getSRA(sraID)
 
-        // get sra files
-        getSRA(sraID)
+    // Getting fastq files
+    fastq=fastqDump(sraID,getSRA.out)
 
-        // get fastq files
-        fastq=fastqDump(sraID,getSRA.out)
+    // Getting chromosome files and reference genome
+    getGenome()
 
-        // get chromosome files and reference genome
-        getGenome()
+    // Annotation file
+    annot=getAnnot()
 
-        //annotation file
-        annot=getAnnot()
+    // Indexation
+    ind=index(getGenome.out, getAnnot.out)
 
-        // Indexation
-        ind=index(getGenome.out, getAnnot.out)
-
-        emit:
-        fastq
-        ind
-	annot
+    emit:
+    fastq
+    ind
+    annot
 
 }
