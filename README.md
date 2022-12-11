@@ -15,7 +15,7 @@
   <p>
 
   **Prérequis** 
-  La configuration actuelle du workflow proposée et la grande dimension du jeu de données nécessitent un noeud de calcul ou bien un machine avec au minimum 16 CPUs et 50 GB de mémoire vive.  
+  La configuration actuelle du workflow proposée et la grande dimension du jeu de données nécessitent un noeud de calcul ou bien un" machine avec 32 CPUs et 70 GB de mémoire vive.  
   
   **Installation**
 
