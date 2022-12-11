@@ -1,4 +1,4 @@
-#!/usr/bin/Rscript --save
+#!/usr/bin/Rscript --slave
 
 set.seed(123)
 library("DESeq2")
