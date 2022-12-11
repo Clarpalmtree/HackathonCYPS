@@ -19,7 +19,7 @@
     Commencer par récupérer les différents scripts et accorder les permissions au répertoire bin :
     
     $ git clone https://github.com/Clarpalmtree/HackathonCYPS/
-    $ cd /HackathonCYPS/
+    $ cd HackathonCYPS/
     $ sudo chmod -R a+rwx bin
   
    Puis activer Conda et lancer le workflow : 
