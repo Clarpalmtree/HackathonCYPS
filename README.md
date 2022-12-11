@@ -68,7 +68,7 @@
    * [clarpalmtree/sra](https://hub.docker.com/r/clarpalmtree/sra) (version current) 
    * [yanismadi/fastqc](https://hub.docker.com/r/yanismadi/fastqc) (version 0.11.9)
    * [yanismadi/subread](https://hub.docker.com/r/yanismadi/subread) (version 2.0.0)
-   * [siwarhm/dseq2](https://hub.docker.com/r/siwarhm/dseq2) (version current)
+   * [docker pull evolbioinfo/deseq2](https://hub.docker.com/r/evolbioinfo/deseq2) (version 1.28.1)
   
   
   **Données biologiques**
